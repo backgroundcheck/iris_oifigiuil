@@ -1,3 +1,4 @@
+require 'scraperwiki'
 # encoding: UTF-8
 require 'nokogiri'
 require 'mechanize'
@@ -52,7 +53,7 @@ def attributes(t,attr)
 end
 
 def exists(lnk)
-  return ScraperWiki.sqliteexecute("select count(*) from swdata where link=?",[lnk])['data'].flatten.first rescue 0
+  return ScraperWiki.sqliteexecute("select count(*) from data where link=?",[lnk])['data'].flatten.first rescue 0
 end
 
 def scrape(data,rec)
@@ -86,12 +87,12 @@ def scrape(data,rec)
   ScraperWiki.save_sqlite(unique_keys=['edition','issue_id','notice_id'],records,table_name='swdata',verbose=2) unless records.length==0
 end
 
-#ScraperWiki.sqliteexecute("update swdata set doc = ?",[Time.now])
+#ScraperWiki.sqliteexecute("update data set doc = ?",[Time.now])
 #ScraperWiki.commit()
 
 #save_metadata("list",914)
 ScraperWiki::attach("ie_official_notices_pdf_urls","ie")
-list = ScraperWiki.sqliteexecute("select edition,issue_number,url from ie.swdata")['data']
+list = ScraperWiki.sqliteexecute("select edition,issue_number,url from ie.data")['data']
 start = get_metadata("list",0)
 list[start..-1].each{|ele|
   begin
